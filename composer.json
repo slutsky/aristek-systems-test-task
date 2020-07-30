@@ -8,6 +8,16 @@
             "email": "slutsky6@gmail.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "AristekSystems\\TestTask\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AristekSystems\\TestTask\\Tests\\": "tests/"
+        }
+    },
     "require-dev": {
         "phpunit/phpunit": "^9.2"
     },
