@@ -1,0 +1,12 @@
+{
+    "name": "aristek-systems/test-task",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "slutsky",
+            "email": "slutsky6@gmail.com"
+        }
+    ],
+    "require": {}
+}
