@@ -24,4 +24,21 @@ class ProjectId
     {
         return $this->id;
     }
+
+    /**
+     * @param ProjectId $another
+     * @return bool
+     */
+    public function equals(ProjectId $another): bool
+    {
+        if ($another === $this) {
+            return true;
+        }
+
+        if ($this->id === null || $another->id === null) {
+            return false;
+        }
+
+        return $this->id === $another->id;
+    }
 }
