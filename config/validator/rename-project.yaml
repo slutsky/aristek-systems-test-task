@@ -1,0 +1,9 @@
+AristekSystems\TestTask\Dto\RenameProjectRequestDto:
+  properties:
+    # string 50 only space and latin letters in any case, min length - 5
+    name:
+      - NotBlank: ~
+      - Length:
+          min: 5
+          max: 50
+      - Regex: '/^[A-Za-z ]+$/'

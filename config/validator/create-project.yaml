@@ -1,0 +1,35 @@
+AristekSystems\TestTask\Dto\CreateProjectRequestDto:
+  properties:
+    # string 50 only space and latin letters in any case, min length - 5
+    name:
+      - NotBlank: ~
+      - Length:
+          min: 5
+          max: 50
+      - Regex: '/^[A-Za-z ]+$/'
+
+    # tring 10 only latin letters in lower case, min length - 3, can not be changed
+    code:
+      - NotBlank: ~
+      - Length:
+          min: 3
+          max: 10
+      - Regex: '/^[a-z]+$/'
+
+    # only valid urls from domain example.com
+    url:
+      - NotBlank: ~
+      - Url: ~
+      - Regex: '/^https?:\/\/example\.com(\/|$)/'
+
+    # BYN amount
+    budget:
+      - NotBlank: ~
+      - PositiveOrZero: ~
+
+    # collection of Contact, at least one is required.
+    contacts:
+      - NotBlank: ~
+      - Count:
+          min: 1
+      - Valid: ~

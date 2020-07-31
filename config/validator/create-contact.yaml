@@ -1,0 +1,18 @@
+AristekSystems\TestTask\Dto\CreateContactRequestDto:
+  properties:
+    # string 50
+    firstName:
+      - NotBlank: ~
+      - Length:
+          max: 50
+
+    # string 50
+    lastName:
+      - NotBlank: ~
+      - Length:
+          max: 50
+
+    # mask +xxx (xx) xxx-xx-xx
+    phone:
+      - NotBlank: ~
+      - Regex: '/^\+\d{3} \(\d{2}\) \d{3}-\d{2}-\d{2}$/'
