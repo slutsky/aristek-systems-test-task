@@ -16,9 +16,9 @@ class ProjectInMemoryRepository implements ProjectRepositoryInterface
     /**
      * @param Project[] $projects
      */
-    public function __construct(array $projects)
+    public function __construct()
     {
-        $this->projects = $projects;
+        $this->projects = [];
     }
 
     /**

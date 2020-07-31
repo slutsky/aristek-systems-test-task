@@ -16,17 +16,19 @@ class ProjectInMemoryRepositoryTest extends TestCase
      */
     private function createProjectStub(ProjectId $projectId): Project
     {
-        $expectedProject = $this->createStub(Project::class);
-        $expectedProject->method('getId')->willReturn($projectId);
+        $project = $this->createStub(Project::class);
+        $project->method('getId')->willReturn($projectId);
 
-        return $expectedProject;
+        /** @var Project $project */
+        return $project;
     }
 
     public function testGetProjects(): void
     {
         $expectedProject = $this->createProjectStub(new ProjectId(1));
 
-        $projectRepository = new ProjectInMemoryRepository([$expectedProject]);
+        $projectRepository = new ProjectInMemoryRepository();
+        $projectRepository->addProject($expectedProject);
         $projects = $projectRepository->getProjects();
 
         $this->assertCount(1, $projects);
@@ -39,11 +41,10 @@ class ProjectInMemoryRepositoryTest extends TestCase
     {
         $expectedProject = $this->createProjectStub(new ProjectId(2));
 
-        $projectRepository = new ProjectInMemoryRepository([
-            $this->createProjectStub(new ProjectId(1)),
-            $expectedProject,
-            $this->createProjectStub(new ProjectId(3))
-        ]);
+        $projectRepository = new ProjectInMemoryRepository();
+        $projectRepository->addProject($this->createProjectStub(new ProjectId(1)));
+        $projectRepository->addProject($expectedProject);
+        $projectRepository->addProject($this->createProjectStub(new ProjectId(3)));
 
         $project = $projectRepository->getProject(new ProjectId(2));
         $this->assertEquals($expectedProject, $project);
@@ -53,10 +54,9 @@ class ProjectInMemoryRepositoryTest extends TestCase
     {
         $expectedProject = $this->createProjectStub(new ProjectId(2));
 
-        $projectRepository = new ProjectInMemoryRepository([
-            $this->createProjectStub(new ProjectId(1)),
-            $this->createProjectStub(new ProjectId(3))
-        ]);
+        $projectRepository = new ProjectInMemoryRepository();
+        $projectRepository->addProject($this->createProjectStub(new ProjectId(1)));
+        $projectRepository->addProject($this->createProjectStub(new ProjectId(3)));
 
         $projectRepository->addProject($expectedProject);
 
@@ -66,11 +66,10 @@ class ProjectInMemoryRepositoryTest extends TestCase
 
     public function testRemoveProject(): void
     {
-        $projectRepository = new ProjectInMemoryRepository([
-            $this->createProjectStub(new ProjectId(1)),
-            $this->createProjectStub(new ProjectId(2)),
-            $this->createProjectStub(new ProjectId(3))
-        ]);
+        $projectRepository = new ProjectInMemoryRepository();
+        $projectRepository->addProject($this->createProjectStub(new ProjectId(1)));
+        $projectRepository->addProject($this->createProjectStub(new ProjectId(2)));
+        $projectRepository->addProject($this->createProjectStub(new ProjectId(3)));
 
         $projectRepository->removeProject(new ProjectId(2));
 

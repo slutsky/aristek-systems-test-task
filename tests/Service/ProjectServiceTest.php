@@ -31,7 +31,9 @@ class ProjectServiceTest extends TestCase
     public function testGetProjects(): void
     {
         $expectedProject = $this->createProjectStub(new ProjectId(1));
-        $projectRepository = new ProjectInMemoryRepository([$expectedProject]);
+        $projectRepository = new ProjectInMemoryRepository();
+        $projectRepository->addProject($expectedProject);
+
         $projectValidator = $this->createMock(ProjectValidator::class);
         /** @var ProjectValidator $projectValidator */
 
@@ -47,11 +49,10 @@ class ProjectServiceTest extends TestCase
     public function testGetProject(): void
     {
         $expectedProject =  $this->createProjectStub(new ProjectId(2));
-        $projectRepository = new ProjectInMemoryRepository([
-            $this->createProjectStub(new ProjectId(1)),
-            $expectedProject, 
-            $this->createProjectStub(new ProjectId(3)),
-        ]);
+        $projectRepository = new ProjectInMemoryRepository();
+        $projectRepository->addProject($this->createProjectStub(new ProjectId(1)));
+        $projectRepository->addProject($expectedProject);
+        $projectRepository->addProject($this->createProjectStub(new ProjectId(3)));
         $projectValidator = $this->createMock(ProjectValidator::class);
         /** @var ProjectValidator $projectValidator */
 
@@ -132,7 +133,8 @@ class ProjectServiceTest extends TestCase
         $project->expects($this->once())->method('rename');
         /** @var Project $project */
 
-        $projectRepository = new ProjectInMemoryRepository([$project]);
+        $projectRepository = new ProjectInMemoryRepository();
+        $projectRepository->addProject($project);
 
         $projectValidator = $this->createMock(ProjectValidator::class);
         $projectValidator->expects($this->once())->method('validateRenameProjectRequest');

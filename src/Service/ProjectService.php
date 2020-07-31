@@ -9,6 +9,7 @@ use AristekSystems\TestTask\Entity\Contact;
 use AristekSystems\TestTask\Entity\Project;
 use AristekSystems\TestTask\Entity\ProjectId;
 use AristekSystems\TestTask\Exception\ProjectNotFoundException;
+use AristekSystems\TestTask\Exception\ValidationException;
 use AristekSystems\TestTask\Repository\ProjectRepositoryInterface;
 use AristekSystems\TestTask\Validator\ProjectValidator;
 
@@ -51,6 +52,7 @@ class ProjectService
 
     /**
      * @param CreateProjectRequestDto $createProjectRequest
+     * @throws ValidationException
      * @return Project
      */
     public function createProject(CreateProjectRequestDto $createProjectRequest): Project
@@ -85,6 +87,7 @@ class ProjectService
 
     /**
      * @param RenameProjectRequestDto $renameProjectRequest
+     * @throws ValidationException
      * @throws ProjectNotFoundException
      * @return Project
      */
