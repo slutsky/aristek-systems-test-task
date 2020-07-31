@@ -24,4 +24,12 @@ class ContactId
     {
         return $this->id;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->id;
+    }
 }

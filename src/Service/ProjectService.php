@@ -23,6 +23,7 @@ class ProjectService
 
     /**
      * @param ProjectRepositoryInterface $projectRepository
+     * @param ProjectValidator $projectValidator
      */
     public function __construct(
         ProjectRepositoryInterface $projectRepository,
@@ -63,14 +64,17 @@ class ProjectService
             $createProjectRequest->getName(),
             $createProjectRequest->getCode(),
             $createProjectRequest->getUrl(),
-            $createProjectRequest->getBudget(),
-            array_map(fn (CreateContactRequestDto $createContactRequestDto) => new Contact(
+            $createProjectRequest->getBudget()
+        );
+
+        foreach ($createProjectRequest->getContacts() as $createContactRequestDto) {
+            $project->createContact(
                 $createContactRequestDto->getFirstName(),
                 $createContactRequestDto->getLastName(),
                 $createContactRequestDto->getPhone()
-            ), $createProjectRequest->getContacts())
-        );
-    
+            );
+        }
+
         $this->projectRepository->addProject($project);
 
         return $project;

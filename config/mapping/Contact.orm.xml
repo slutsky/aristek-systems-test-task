@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="AristekSystems\TestTask\Entity\Contact" table="contact">
+        <id name="id" type="contact_id" column="id">
+            <generator strategy="IDENTITY"/>
+            <custom-id-generator class="AristekSystems\TestTask\Doctrine\Generator\ContactIdGenerator"/>
+        </id>
+
+        <field name="firstName" type="string" length="50" />
+        <field name="lastName" type="string" length="50" />
+        <field name="phone" type="string" length="50" />
+
+        <many-to-one field="project" target-entity="AristekSystems\TestTask\Entity\Project" inversedBy="contacts">
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

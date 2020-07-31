@@ -2,7 +2,6 @@
 
 namespace AristekSystems\TestTask\Tests\Entity;
 
-use AristekSystems\TestTask\Entity\Contact;
 use AristekSystems\TestTask\Entity\Project;
 use PHPUnit\Framework\TestCase;
 
@@ -17,22 +16,12 @@ class ProjectTest extends TestCase
         $expectedCode = 'project';
         $expectedUrl = 'http://example.com/my-page';
         $expectedBudget = 100;
-        $expectedContactFirstName = 'Jon';
-        $expectedContactLastName = 'Doe';
-        $expectedContactPhone = '+012 (34) 567-89-10';
 
         $project = new Project(
             $expectedName,
             $expectedCode,
             $expectedUrl,
-            $expectedBudget,
-            [
-                new Contact(
-                    $expectedContactFirstName,
-                    $expectedContactLastName,
-                    $expectedContactPhone
-                )
-            ]
+            $expectedBudget
         );
 
         $this->assertEquals($expectedName, $project->getName());
@@ -40,15 +29,35 @@ class ProjectTest extends TestCase
         $this->assertEquals($expectedUrl, $project->getUrl());
         $this->assertEquals($expectedBudget, $project->getBudget());
 
+        return $project;
+    }
+
+    /**
+     * @depends testCreation
+     * @param Project $project
+     */
+    public function testCreateContact(Project $project): void
+    {
+        $expectedFirstName = 'Jon';
+        $expectedLastName = 'Doe';
+        $expectedPhone = '+012 (34) 567-89-10';
+
+        $contact = $project->createContact(
+            $expectedFirstName,
+            $expectedLastName,
+            $expectedPhone
+        );
+
+        $this->assertEquals($expectedFirstName, $contact->getFirstName());
+        $this->assertEquals($expectedLastName, $contact->getLastName());
+        $this->assertEquals($expectedPhone, $contact->getPhone());
+
         $contacts = $project->getContacts();
         $this->assertCount(1, $contacts);
-
-        $contact = $contacts[0];
-        $this->assertEquals($expectedContactFirstName, $contact->getFirstName());
-        $this->assertEquals($expectedContactLastName, $contact->getLastName());
-        $this->assertEquals($expectedContactPhone, $contact->getPhone());
-
-        return $project;
+        $this->assertEquals($contact, $contacts[0]);
+        $this->assertEquals($expectedFirstName, $contacts[0]->getFirstName());
+        $this->assertEquals($expectedLastName, $contacts[0]->getLastName());
+        $this->assertEquals($expectedPhone, $contacts[0]->getPhone());
     }
 
     /**

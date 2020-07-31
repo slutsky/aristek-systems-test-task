@@ -41,4 +41,12 @@ class ProjectId
 
         return $this->id === $another->id;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->id;
+    }
 }

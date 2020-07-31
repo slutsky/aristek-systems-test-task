@@ -2,6 +2,8 @@
 
 namespace AristekSystems\TestTask\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class Project
 {
     /**
@@ -38,7 +40,7 @@ class Project
     private $budget;
 
     /**
-     * @var Contact[]
+     * @var ArrayCollection<Contact>
      */
     private $contacts;
 
@@ -75,9 +77,9 @@ class Project
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getBudget(): string
+    public function getBudget(): int
     {
         return $this->budget;
     }
@@ -87,7 +89,7 @@ class Project
      */
     public function getContacts(): array
     {
-        return $this->contacts;
+        return $this->contacts->toArray();
     }
 
     /**
@@ -95,21 +97,42 @@ class Project
      * @param string $code
      * @param string $url
      * @param string $budget
-     * @param Contact[] $contacts
      */
     public function __construct(
         string $name,
         string $code,
         string $url,
-        string $budget,
-        array $contacts
+        string $budget
     ) {
         $this->id = new ProjectId();
         $this->name = $name;
         $this->code = $code;
         $this->url = $url;
         $this->budget = $budget;
-        $this->contacts = $contacts;
+        $this->contacts = new ArrayCollection();
+    }
+
+    /**
+     * @param string $firstName
+     * @param string $lastName
+     * @param string $phone
+     * @return Contact
+     */
+    public function createContact(
+        string $firstName,
+        string $lastName,
+        string $phone
+    ): Contact {
+        $contact = new Contact(
+            $this,
+            $firstName,
+            $lastName,
+            $phone
+        );
+
+        $this->contacts->add($contact);
+
+        return $contact;
     }
 
     /**

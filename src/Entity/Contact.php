@@ -5,6 +5,11 @@ namespace AristekSystems\TestTask\Entity;
 class Contact
 {
     /**
+     * @var Project
+     */
+    private $project;
+
+    /**
      * @var ContactId
      */
     private $id;
@@ -63,13 +68,19 @@ class Contact
     }
 
     /**
+     * @param Project $project
      * @param string $firstName
      * @param string $lastName
      * @param string $phone
      */
-    public function __construct(string $firstName, string $lastName, string $phone)
-    {
+    public function __construct(
+        Project $project,
+        string $firstName,
+        string $lastName,
+        string $phone
+    ) {
         $this->id = new ContactId();
+        $this->project = $project;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->phone = $phone;
