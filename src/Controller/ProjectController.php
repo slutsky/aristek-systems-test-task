@@ -8,6 +8,7 @@ use AristekSystems\TestTask\Dto\RenameProjectRequestDto;
 use AristekSystems\TestTask\Entity\Contact;
 use AristekSystems\TestTask\Entity\Project;
 use AristekSystems\TestTask\Entity\ProjectId;
+use AristekSystems\TestTask\Normalizer\ProjectNormalizer;
 use AristekSystems\TestTask\Service\ProjectService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -28,15 +29,23 @@ class ProjectController
     private $projectService;
 
     /**
+     * @var ProjectNormalizer
+     */
+    private $projectNormalizer;
+
+    /**
      * @param EntityManagerInterface $entityManager
      * @param ProjectService $projectService
+     * @param ProjectNormalizer $projectNormalizer
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        ProjectService $projectService
+        ProjectService $projectService,
+        ProjectNormalizer $projectNormalizer
     ) {
         $this->entityManager = $entityManager;
         $this->projectService = $projectService;
+        $this->projectNormalizer = $projectNormalizer;
     }
 
     /**
@@ -47,19 +56,10 @@ class ProjectController
     {
         $projects = $this->projectService->getProjects();
         
-        return new JsonResponse(array_map(fn (Project $project) => [
-            'id' => $project->getId()->toValue(),
-            'name' => $project->getName(),
-            'code' => $project->getCode(),
-            'url' => $project->getUrl(),
-            'budget' => $project->getBudget(),
-            'contacts' => array_map(fn (Contact $contact) => [
-                'id' => $contact->getId()->toValue(),
-                'girstName' => $contact->getFirstName(),
-                'firstName' => $contact->getFirstName(),
-                'phone' => $contact->getPhone()
-            ], $project->getContacts())
-        ], $projects), Response::HTTP_OK);
+        return new JsonResponse(
+            array_map(fn (Project $project) => $this->projectNormalizer->normalize($project), $projects),
+            Response::HTTP_OK
+        );
     }
 
     /**
@@ -71,19 +71,10 @@ class ProjectController
     {
         $project = $this->projectService->getProject(new ProjectId($projectId));
 
-        return new JsonResponse([
-            'id' => $project->getId()->toValue(),
-            'name' => $project->getName(),
-            'code' => $project->getCode(),
-            'url' => $project->getUrl(),
-            'budget' => $project->getBudget(),
-            'contacts' => array_map(fn (Contact $contact) => [
-                'id' => $contact->getId()->toValue(),
-                'girstName' => $contact->getFirstName(),
-                'firstName' => $contact->getFirstName(),
-                'phone' => $contact->getPhone()
-            ], $project->getContacts())
-        ], Response::HTTP_OK);
+        return new JsonResponse(
+            $this->projectNormalizer->normalize($project),
+            Response::HTTP_OK
+        );
     }
 
     /**
@@ -109,19 +100,10 @@ class ProjectController
         
         $this->entityManager->flush();
 
-        return new JsonResponse([
-            'id' => $project->getId()->toValue(),
-            'name' => $project->getName(),
-            'code' => $project->getCode(),
-            'url' => $project->getUrl(),
-            'budget' => $project->getBudget(),
-            'contacts' => array_map(fn (Contact $contact) => [
-                'id' => $contact->getId()->toValue(),
-                'girstName' => $contact->getFirstName(),
-                'firstName' => $contact->getFirstName(),
-                'phone' => $contact->getPhone()
-            ], $project->getContacts())
-        ], Response::HTTP_CREATED);
+        return new JsonResponse(
+            $this->projectNormalizer->normalize($project),
+            Response::HTTP_CREATED
+        );
     }
 
     /**
@@ -141,31 +123,22 @@ class ProjectController
 
         $this->entityManager->flush();
 
-        return new JsonResponse([
-            'id' => $project->getId()->toValue(),
-            'name' => $project->getName(),
-            'code' => $project->getCode(),
-            'url' => $project->getUrl(),
-            'budget' => $project->getBudget(),
-            'contacts' => array_map(fn (Contact $contact) => [
-                'id' => $contact->getId()->toValue(),
-                'girstName' => $contact->getFirstName(),
-                'firstName' => $contact->getFirstName(),
-                'phone' => $contact->getPhone()
-            ], $project->getContacts())
-        ], Response::HTTP_OK);
+        return new JsonResponse(
+            $this->projectNormalizer->normalize($project),
+            Response::HTTP_OK
+        );
     }
 
     /**
      * @Route("/projects/{projectId}", methods={"DELETE"}, name="delete_project")
      * @param ProjectId $projectId
      */
-    public function deleteProjectAction(int $projectId): JsonResponse
+    public function deleteProjectAction(int $projectId): Response
     {
         $this->projectService->deleteProject(new ProjectId($projectId));
 
         $this->entityManager->flush();
 
-        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+        return new Response(null, Response::HTTP_NO_CONTENT);
     }
 }
