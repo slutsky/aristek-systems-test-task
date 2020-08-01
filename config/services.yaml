@@ -31,3 +31,8 @@ services:
     # please note that last definitions always *replace* previous ones
     AristekSystems\TestTask\Repository\ProjectRepositoryInterface:
         class: AristekSystems\TestTask\Repository\DoctrineProjectRepository
+
+    AristekSystems\TestTask\Subscriber\KernelEventSubscriber:
+        arguments:
+            $tokenName: '%env(string:TOKEN_NAME)%'
+            $tokenExpectedValue: '%env(string:TOKEN_EXPECTED_VALUE)%'
